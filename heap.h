@@ -33,32 +33,13 @@ struct MinHeap {
         return min_index;
     }
 
-
     void upheap(int pos, int weightArr[]) {
-    int left = pos*2 + 1;
-    int right = pos*2 + 2;
-    int root = (pos - 1) / 2;
+        int parent = (pos - 1) / 2;
 
-
-
-
-    if (root < weightArr[left] && weightArr[right]) {
-        //no change
-    }
-    if (root > weightArr[left]) {
-        swap(weightArr[root], weightArr[left]);
-    }
-    if (root > weightArr[right]) {
-        swap(weightArr[root], weightArr[right]);
-    }
-
-    //parent
-    //(i - 1) / 2
-    //children
-    //2*i + 1, 2*i +2;
-
-        // TODO: swap child upward while smaller than parent
-
+        if (weightArr[data[pos]] > weightArr[data[parent]]) {
+            swap(data[pos], data[parent]);
+            pos = parent;
+        }
     }
 
     void downheap(int pos, int weightArr[]) {
