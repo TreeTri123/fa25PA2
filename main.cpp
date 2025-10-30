@@ -91,19 +91,19 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
     MinHeap heap; //MinHeap object
 
-    for (int i = 0; i < 64; ++i) { //Push all leaf nodeindicies into heap
+    for (int i = 0; i < 64; i++) { //Push all leaf nodeindicies into heap
         heap.push(i, weightArr);
     }
 
     while (heap.size > 1) { //While loop
         //pop two smallest nodes
-        int first = heap.pop(weightArr);
-        int second = heap.pop(weightArr);
+        int left = heap.pop(weightArr);
+        int right = heap.pop(weightArr);
 
         //
         weightArr[nextFree] = weightArr[first] + weightArr[second]; //New parent node with combined weight
-        leftArr[nextFree] = first; //Left pointer
-        rightArr[nextFree] = second; //Right pointer
+        leftArr[nextFree] = left; //Left pointer
+        rightArr[nextFree] = right; //Right pointer
 
         heap.push(nextFree, weightArr); //Push parent index into heap
 
@@ -117,6 +117,9 @@ int buildEncodingTree(int nextFree) {
 
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
+    leftArr[root] = 0;
+    rightArr[root] = 1;
+
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
