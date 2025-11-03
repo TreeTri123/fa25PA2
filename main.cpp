@@ -123,7 +123,7 @@ void generateCodes(int root, string codes[]) {
 
     if (root == -1) return;
 
-    // Handle single-node tree (only one character)
+    //single node tree
     if (leftArr[root] == -1 && rightArr[root] == -1) {
         char ch = charArr[root];
         if (ch >= 'a' && ch <= 'z') {
@@ -144,6 +144,7 @@ void generateCodes(int root, string codes[]) {
         int left = leftArr[index];
         int right = rightArr[index];
 
+        //parent node heaps
         if (left == -1 && right == -1) {
             char ch = charArr[index];
             if (ch >= 'a' && ch <= 'z') {

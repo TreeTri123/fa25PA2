@@ -30,8 +30,10 @@ struct MinHeap {
 
         int min_index = data[0];
         size--;
+
         if (size > 0) {
             data[0] = data[size];
+            //rearrange heap back
             downheap(0, weightArr);
         }
         return min_index;
@@ -41,6 +43,7 @@ struct MinHeap {
         while (pos > 0) {
             int parent = (pos - 1) / 2;
 
+            //fill up position moved, parent should be less
             if (weightArr[data[pos]] < weightArr[data[parent]]) {
                 int tmp = data[pos];
                 data[pos] = data[parent];
@@ -67,7 +70,7 @@ struct MinHeap {
                     small = right;
                 }
             }
-
+            //fill up position, small (left) should be less
             if (weightArr[data[small]] < weightArr[data[pos]]) {
                 int tmp = data[small];
                 data[small] = data[pos];
