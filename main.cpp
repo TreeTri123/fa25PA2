@@ -92,26 +92,27 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
     MinHeap heap; //MinHeap object
 
-    for (int i = 0; i < 64; i++) { //Push all leaf nodeindicies into heap
+    for (int i = 0; i < nextFree; i++) { //Push all leaf nodeindicies into heap
         heap.push(i, weightArr);
     }
+    if (heap.size == 0) return -1;
 
     while (heap.size > 1) { //While loop
         //pop two smallest nodes
         int left = heap.pop(weightArr);
         int right = heap.pop(weightArr);
-
-
-        weightArr[nextFree] = weightArr[left] + weightArr[right]; //New parent node with combined weight
-        leftArr[nextFree] = left; //Left pointer
-        rightArr[nextFree] = right; //Right pointer
-
-        heap.push(nextFree, weightArr); //Push parent index into heap
-
+        int parent = nextFree;
         nextFree++;
+
+        leftArr[parent] = left; //Left pointer
+        rightArr[parent] = right; //Right pointer
+
+        weightArr[parent] = weightArr[left] + weightArr[right]; //New parent node with combined weight
+
+        heap.push(parent, weightArr); //Push parent index into heap
+
     }
-    int rootIndex = heap.pop(weightArr);
-    return rootIndex;
+    return heap.data[0];
 }
 
 
@@ -120,27 +121,40 @@ int buildEncodingTree(int nextFree) {
 void generateCodes(int root, string codes[]) {
     stack<pair<int, string>> stack;
 
-    if (root != -1) {
-        stack.push({root, ""});
+    if (root == -1) return;
 
-        while (!stack.empty()) {
-            pair<int, string> top = stack.top();
-            stack.pop();
+    // Handle single-node tree (only one character)
+    if (leftArr[root] == -1 && rightArr[root] == -1) {
+        char ch = charArr[root];
+        if (ch >= 'a' && ch <= 'z') {
+            codes[ch - 'a'] = "0";
+        }
+        return;
+    }
 
-            int index = top.first;
-            string code = top.second;
+    stack.push({root, ""});
 
-            if (leftArr[index] != -1) {
-                char ch = charArr[index];
-                codes[ch - 'a'] = code;
-            } else {
+    while (!stack.empty()) {
+        pair<int, string> top = stack.top();
+        stack.pop();
 
-                if (rightArr[index] != -1) {
-                    stack.push({rightArr[index], code + '1'});
-                }
-                if (leftArr[index] != -1) {
-                    stack.push({leftArr[index], code + '0'});
-                }
+        int index = top.first;
+        string code = top.second;
+
+        int left = leftArr[index];
+        int right = rightArr[index];
+
+        if (left == -1 && right == -1) {
+            char ch = charArr[index];
+            if (ch >= 'a' && ch <= 'z') {
+                codes[ch - 'a'] = code.empty() ? "0" : code;
+            }
+        } else {
+            if (right != -1) {
+                stack.push({right, code + '1'});
+            }
+            if (left != -1) {
+                stack.push({left, code + '0'});
             }
         }
     }
